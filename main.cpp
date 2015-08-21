@@ -12,6 +12,8 @@ enum state_t {STOP, REC, PLAY};
 struct audioData_t {
 	state_t state;
 	int32_t *buffer;
+	unsigned bufferSize;
+	unsigned iteration = 0;
 };
 
 int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
@@ -29,13 +31,15 @@ int main() {
 
 	RtAudio::StreamParameters iParams, oParams;
 	iParams.deviceId = adc.getDefaultInputDevice();
-	iParams.nChannels = 1;
+	iParams.nChannels = 2;
 	oParams.deviceId = adc.getDefaultOutputDevice();
-	oParams.nChannels = 1;
+	oParams.nChannels = 2;
 
 	audioData_t audioData;
 	audioData.state = STOP;
-	if(!(audioData.buffer = (int32_t *) malloc (sampleRate))) { // Try to allocate 1 second of audio
+	audioData.bufferSize = 48000*sizeof(int32_t);
+
+	if(!(audioData.buffer = (int32_t *) malloc (audioData.bufferSize))) { // Try to allocate 1 second of audio
 		cout << "Failed to allocate memory" << endl;
 		exit(0);
 	}
@@ -51,11 +55,9 @@ int main() {
 	while(1) {
 		char input;
 		cin.get( input );
-		cout << "Got " << input << endl;
 		switch(input) {
 			case 'r':
 				audioData.state = REC;
-				cout << "It's now REC" << endl;
 				break;
 			case 'p':
 				audioData.state = PLAY;
@@ -83,20 +85,55 @@ int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrame
 		double streamTime, RtAudioStreamStatus status, void *userData) {
 
 	audioData_t *data = static_cast<audioData_t*>(userData);
+	int32_t *inBuffer = static_cast<int32_t*> (inputBuffer);
+	int32_t *outBuffer = static_cast<int32_t*> (outputBuffer);
 
 	if (status) cout << "Stream overflow detected!" << endl;
 
 	if(data->state == REC) {
-		cout << "Recording" << endl;
+
+		if(data->iteration < SAMPLE_RATE/nBufferFrames) {
+			for(unsigned i=0; i<nBufferFrames; i++) {
+				unsigned j = i + (nBufferFrames * data->iteration);
+
+				if(j < data->bufferSize) {
+					data->buffer[j] = inBuffer[i];
+				} else {
+					return 0;
+				}
+			}
+
+			data->iteration++;
+		} else {
+			data->state = STOP;
+			data->iteration = 0;
+		}
+
 	} else if (data->state == PLAY) {
-		cout << "Playing" << endl;
+
+		if(data->iteration < SAMPLE_RATE/nBufferFrames) {
+			for(unsigned i=0; i<nBufferFrames; i++) {
+				unsigned j = i + (nBufferFrames * data->iteration);
+
+				if(j < data->bufferSize) {
+					outBuffer[i] = data->buffer[j];
+				} else {
+					return 0;
+				}
+			}
+
+			data->iteration++;
+		} else {
+			data->state = STOP;
+			data->iteration = 0;
+		}
+
 	} else if (data->state == STOP) {
 		return 0;
 	} else {
 		cout << "Couldn't get state from audioData" << endl;
 		exit(0);
 	}
-
 
 	return 0;
 }
