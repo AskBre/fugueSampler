@@ -1,5 +1,6 @@
 #include "RtAudio.h"
 #include <iostream>
+#include <string.h>
 
 #define SAMPLE_RATE 48000
 #define BUFFER_FRAMES 256
@@ -126,6 +127,7 @@ int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrame
 		} else {
 			data->state = STOP;
 			data->iteration = 0;
+			memset(outBuffer, 0, nBufferFrames);
 		}
 
 	} else if (data->state == STOP) {
