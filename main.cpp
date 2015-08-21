@@ -11,7 +11,7 @@ enum state_t {STOP, REC, PLAY};
 
 struct audioData_t {
 	state_t state;
-	int *buffer;
+	int32_t *buffer;
 };
 
 int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
@@ -24,6 +24,9 @@ int main() {
 		exit(0);
 	}
 
+	unsigned sampleRate = SAMPLE_RATE;
+	unsigned bufferFrames = BUFFER_FRAMES;
+
 	RtAudio::StreamParameters iParams, oParams;
 	iParams.deviceId = adc.getDefaultInputDevice();
 	iParams.nChannels = 1;
@@ -32,22 +35,38 @@ int main() {
 
 	audioData_t audioData;
 	audioData.state = STOP;
-	if(!(audioData.buffer = malloc (SAMPLE_RATE * sizeof (int)))) { // Try to allocate 1 second of audio
+	if(!(audioData.buffer = (int32_t *) malloc (sampleRate))) { // Try to allocate 1 second of audio
 		cout << "Failed to allocate memory" << endl;
 		exit(0);
 	}
 
 	try {
-		adc.openStream( &oParams, &iParams, RTAUDIO_SINT24, SAMPLE_RATE, BUFFER_FRAMES, &recAndPlay, &audioData);
+		adc.openStream( &oParams, &iParams, RTAUDIO_SINT32, sampleRate, &bufferFrames, &recAndPlay, &audioData);
 		adc.startStream();
 	} catch (RtAudioError &error) {
 		error.printMessage();
 		exit(0);
 	}
 
-	char input;
-	cout << "Running, press enter to exit." << endl;
-	cin.get( input );
+	while(1) {
+		char input;
+		cin.get( input );
+		cout << "Got " << input << endl;
+		switch(input) {
+			case 'r':
+				audioData.state = REC;
+				cout << "It's now REC" << endl;
+				break;
+			case 'p':
+				audioData.state = PLAY;
+				break;
+			case 's':
+				audioData.state = STOP;
+				break;
+			default:
+				break;
+		}
+	}
 
 	try {
 		adc.stopStream();
@@ -63,13 +82,15 @@ int main() {
 int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 		double streamTime, RtAudioStreamStatus status, void *userData) {
 
-	audioData_t *lDataP = static_cast<audioData*>(userData);
+	audioData_t *data = static_cast<audioData_t*>(userData);
 
 	if (status) cout << "Stream overflow detected!" << endl;
 
-	if(state == REC) {
-	} else if (state == PLAY) {
-	} else if (state == STOP) {
+	if(data->state == REC) {
+		cout << "Recording" << endl;
+	} else if (data->state == PLAY) {
+		cout << "Playing" << endl;
+	} else if (data->state == STOP) {
 		return 0;
 	} else {
 		cout << "Couldn't get state from audioData" << endl;
