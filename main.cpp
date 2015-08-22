@@ -12,7 +12,7 @@ enum state_t {STOP, REC, PLAY};
 
 struct audioData_t {
 	state_t state;
-	int32_t *buffer;
+	double *buffer;
 	unsigned bufferSize;
 	unsigned iteration = 0;
 };
@@ -38,15 +38,15 @@ int main() {
 
 	audioData_t audioData;
 	audioData.state = STOP;
-	audioData.bufferSize = 48000*sizeof(int32_t);
+	audioData.bufferSize = 48000*sizeof(double);
 
-	if(!(audioData.buffer = (int32_t *) malloc (audioData.bufferSize))) { // Try to allocate 1 second of audio
+	if(!(audioData.buffer = (double *) malloc (audioData.bufferSize))) { // Try to allocate 1 second of audio
 		cout << "Failed to allocate memory" << endl;
 		exit(0);
 	}
 
 	try {
-		adc.openStream( &oParams, &iParams, RTAUDIO_SINT32, sampleRate, &bufferFrames, &recAndPlay, &audioData);
+		adc.openStream( &oParams, &iParams, RTAUDIO_FLOAT32, sampleRate, &bufferFrames, &recAndPlay, &audioData);
 		adc.startStream();
 	} catch (RtAudioError &error) {
 		error.printMessage();
@@ -86,8 +86,8 @@ int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrame
 		double streamTime, RtAudioStreamStatus status, void *userData) {
 
 	audioData_t *data = static_cast<audioData_t*>(userData);
-	int32_t *inBuffer = static_cast<int32_t*> (inputBuffer);
-	int32_t *outBuffer = static_cast<int32_t*> (outputBuffer);
+	double *inBuffer = static_cast<double*> (inputBuffer);
+	double *outBuffer = static_cast<double*> (outputBuffer);
 
 	if (status) cout << "Stream overflow detected!" << endl;
 
@@ -108,6 +108,7 @@ int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrame
 		} else {
 			data->state = STOP;
 			data->iteration = 0;
+			memset(inBuffer, 0, nBufferFrames);
 		}
 
 	} else if (data->state == PLAY) {
