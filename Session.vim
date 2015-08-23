@@ -3,16 +3,19 @@ if &cp | set nocp | endif
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
-cd ~/Development/C++/sampler
+cd ~/Development/C++/fugueSampler
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +0 main.cpp
+badd +0 src/main.cpp
+badd +0 Make
+badd +0 Makefile
 argglobal
 silent! argdel *
-argadd main.cpp
-edit main.cpp
+argadd src/main.cpp
+set stal=2
+edit src/main.cpp
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -28,13 +31,36 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 81 - ((80 * winheight(0) + 42) / 84)
+let s:l = 1 - ((0 * winheight(0) + 64) / 129)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-81
+1
+normal! 0
+tabedit Makefile
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 1 - ((0 * winheight(0) + 64) / 129)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
 normal! 0
 tabnext 1
+set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif
