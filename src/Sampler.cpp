@@ -1,5 +1,6 @@
 #include "Sampler.h"
 
+// Maybe I should move more of this into SamplerTrack?
 int Sampler::setup() {
 
 	if (audio.getDeviceCount() < 1 ) {
@@ -108,6 +109,8 @@ int Sampler::getTrackIndex(const char &name) {
 	return -1;
 }
 
+// Outside (But want to move in?)
+//----------------------------------------------------------------
 int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 		double streamTime, RtAudioStreamStatus status, void *userData) {
 
