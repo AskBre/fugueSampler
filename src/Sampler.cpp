@@ -22,10 +22,12 @@ int Sampler::newTrack(const char trackName, const float trackLengthInSec) {
 		exit(0);
 	}
 
-	track_t track;
+	SamplerTrack track;
 
 	track.name = trackName;
 	track.bufferSize = (SAMPLE_RATE*trackLengthInSec) * sizeof(double);
+	track.sampleRate = SAMPLE_RATE;
+	track.bufferFrames = BUFFER_FRAMES;
 
 	if(!(track.buffer = (double *) malloc (track.bufferSize))) {
 		cout << "Failed to allocate memory" << endl;
@@ -109,9 +111,7 @@ int Sampler::getTrackIndex(const char &name) {
 int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 		double streamTime, RtAudioStreamStatus status, void *userData) {
 
-	// Need to double check the pointer arithmetics going on here,
-	// doesn't seem to be pointing at all — just creating new tracks!
-	vector<track_t> *tracks = static_cast<vector <track_t> *> (userData);
+	vector<SamplerTrack> *tracks = static_cast<vector <SamplerTrack> *> (userData);
 	double *inBuffer = static_cast<double*> (inputBuffer);
 	double *outBuffer = static_cast<double*> (outputBuffer);
 
@@ -119,44 +119,9 @@ int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrame
 
 	for(auto &track : *tracks) {
 		if(track.state == REC) {
-			cout << "Recording track " << track.name << endl;
-			if(track.iteration < SAMPLE_RATE/nBufferFrames) {
-				for(unsigned i=0; i<nBufferFrames; i++) {
-					unsigned j = i + (nBufferFrames * track.iteration);
-					if(j < track.bufferSize) {
-						track.buffer[j] = inBuffer[i];
-					} else {
-						return 0;
-					}
-				}
-
-				track.iteration++;
-			} else {
-				track.state = STOP;
-				track.iteration = 0;
-				memset(inBuffer, 0, nBufferFrames);
-			}
+			track.record(inBuffer);
 		} else if (track.state == PLAY) {
-			cout << "Playing track " << track.name << endl;
-
-			if(track.iteration < SAMPLE_RATE/nBufferFrames) {
-				for(unsigned i=0; i<nBufferFrames; i++) {
-					unsigned j = i + (nBufferFrames * track.iteration);
-
-					if(j < track.bufferSize) {
-						outBuffer[i] = track.buffer[j];
-					} else {
-						return 0;
-					}
-				}
-
-				track.iteration++;
-			} else {
-				track.state = STOP;
-				track.iteration = 0;
-				memset(outBuffer, 0, nBufferFrames);
-			}
-
+			track.play(outBuffer);
 		} else if (track.state == STOP) {
 			return 0;
 		} else {
@@ -164,6 +129,5 @@ int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrame
 			exit(0);
 		}
 	}
-
 	return 0;
 }

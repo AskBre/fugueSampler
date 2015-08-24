@@ -1,5 +1,5 @@
 CC=clang++ -std=c++11
-OBJ=src/main.cpp src/Sampler.cpp
+OBJ=src/main.cpp src/Sampler.cpp src/SamplerTrack.cpp
 
 SDIR=src
 IDIR=include

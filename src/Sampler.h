@@ -5,21 +5,12 @@
 #include <string.h>
 #include <algorithm>
 
+#include "SamplerTrack.h"
+
 #define SAMPLE_RATE 48000
 #define BUFFER_FRAMES 256
 
 using namespace std;
-
-enum state_t {STOP, REC, PLAY};
-
-struct track_t {
-	char name;
-	state_t state = STOP;
-	double *buffer;
-	float trackLengthInSec;
-	unsigned bufferSize;
-	unsigned iteration = 0;
-};
 
 class Sampler {
 	public:
@@ -33,12 +24,14 @@ class Sampler {
 	private:
 		RtAudio audio;
 		RtAudio::StreamParameters iParams, oParams;
-		vector<track_t> tracks;
+		vector<SamplerTrack> tracks;
 
 		int getTrackIndex(const char &name);
+
 
 };
 
 int recAndPlay(void *outputBuffer, void *inputBuffer,
 		unsigned int nBufferFrames, double streamTime,
 		RtAudioStreamStatus status, void *userData);
+
