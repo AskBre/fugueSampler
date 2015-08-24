@@ -23,6 +23,7 @@ int main() {
 				sampler.record('b');
 				break;
 			case 'p':
+				sampler.play('a', 0.25);
 //				audioData.state = PLAY;
 				break;
 			case 's':

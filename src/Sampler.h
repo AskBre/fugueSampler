@@ -16,6 +16,7 @@ struct track_t {
 	char name;
 	state_t state = STOP;
 	double *buffer;
+	float trackLengthInSec;
 	unsigned bufferSize;
 	unsigned iteration = 0;
 };
@@ -33,6 +34,8 @@ class Sampler {
 		RtAudio audio;
 		RtAudio::StreamParameters iParams, oParams;
 		vector<track_t> tracks;
+
+		int getTrackIndex(const char &name);
 
 };
 

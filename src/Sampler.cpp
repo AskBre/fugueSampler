@@ -16,20 +16,16 @@ int Sampler::setup() {
 	return 0;
 }
 
-int Sampler::newTrack(const char name, const float seconds) {
-	track_t track;
-
-	auto pred = [name](const track_t & track) {
-		return track.name == name;
-	};
-
-	if(find_if(begin(tracks), end(tracks), pred) != end(tracks)) {
-		cerr << "This trackname already exists!" << endl;
+int Sampler::newTrack(const char trackName, const float trackLengthInSec) {
+	if(getTrackIndex(trackName) != -1) {
+		cerr << "Trackname " << trackName << " already exists!" << endl;
 		exit(0);
 	}
 
-	track.name = name;
-	track.bufferSize = (SAMPLE_RATE*seconds) * sizeof(double);
+	track_t track;
+
+	track.name = trackName;
+	track.bufferSize = (SAMPLE_RATE*trackLengthInSec) * sizeof(double);
 
 	if(!(track.buffer = (double *) malloc (track.bufferSize))) {
 		cout << "Failed to allocate memory" << endl;
@@ -73,17 +69,42 @@ int Sampler::closeStream() {
 }
 
 int Sampler::record(const char trackName) {
-	tracks[0].state = REC;
-	tracks[1].state = REC;
+	int i = getTrackIndex(trackName);
+
+	if (i == -1) {
+		cerr << "No track found with name " << trackName << endl;
+		exit(0);
+	} else {
+		tracks[i].state = REC;
+	}
+
 	return 0;
 }
 
-int Sampler::play(const char trackName, const float seconds) {
+int Sampler::play(const char trackName, const float trackLengthInSec) {
+	int i = getTrackIndex(trackName);
+
+	if (i == -1) {
+		cerr << "No track found with name " << trackName << endl;
+		exit(0);
+	} else {
+		tracks[i].trackLengthInSec = trackLengthInSec;
+		tracks[i].state = PLAY;
+	}
+
 	return 0;
 }
 
 // Private
 //----------------------------------------------------------------
+
+int Sampler::getTrackIndex(const char &name) {
+	for(int i=0; i<tracks.size(); i++) {
+		if (tracks[i].name == name) return i;
+	}
+
+	return -1;
+}
 
 int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 		double streamTime, RtAudioStreamStatus status, void *userData) {
@@ -98,6 +119,7 @@ int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrame
 
 	for(auto &track : *tracks) {
 		if(track.state == REC) {
+			cout << "Recording track " << track.name << endl;
 			if(track.iteration < SAMPLE_RATE/nBufferFrames) {
 				for(unsigned i=0; i<nBufferFrames; i++) {
 					unsigned j = i + (nBufferFrames * track.iteration);
@@ -115,6 +137,7 @@ int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrame
 				memset(inBuffer, 0, nBufferFrames);
 			}
 		} else if (track.state == PLAY) {
+			cout << "Playing track " << track.name << endl;
 
 			if(track.iteration < SAMPLE_RATE/nBufferFrames) {
 				for(unsigned i=0; i<nBufferFrames; i++) {
