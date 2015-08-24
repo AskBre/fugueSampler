@@ -1,5 +1,5 @@
 CC=clang++ -std=c++11
-OBJ=src/main.cpp
+OBJ=src/main.cpp src/Sampler.cpp
 
 SDIR=src
 IDIR=include
@@ -7,15 +7,15 @@ ODIR=obj
 LDIR=lib
 
 DEPS=$(SDIR)/%.h $(IDIR)/%.h
-LIBS=-lmidifile
+LIBS=-lmidifile -lrtaudio
 
-CFLAGS=-I$(IDIR) -L$(LDIR)
+CFLAGS=-I$(IDIR) -L$(LDIR) -g
 
-$(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
+$(ODIR)/%.o:$(SDIR)/%.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS) 
 
 main:$(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 run:
-	./main ricercar_6_full.mid
+	./main 
