@@ -6,7 +6,7 @@ void SamplerTrack::record(double *inBuffer) {
 		for(unsigned i=0; i<bufferFrames; i++) {
 			unsigned j = i + (bufferFrames *  iteration);
 			if(j <  bufferSize) {
-				 buffer[j] = inBuffer[i];
+				buffer[j] = inBuffer[i];
 			} else {
 				break;
 			}
@@ -14,8 +14,8 @@ void SamplerTrack::record(double *inBuffer) {
 
 		iteration++;
 	} else {
-		 state = STOP;
-		 iteration = 0;
+		state = STOP;
+		iteration = 0;
 		memset(inBuffer, 0, bufferFrames);
 	}
 }
@@ -34,10 +34,10 @@ void SamplerTrack::play(double *outBuffer) {
 			}
 		}
 
-		 iteration++;
+		iteration++;
 	} else {
-		 state = STOP;
-		 iteration = 0;
+		state = STOP;
+		iteration = 0;
 		memset(outBuffer, 0, bufferFrames);
 	}
 
