@@ -14,12 +14,12 @@ using namespace std;
 
 class Sampler {
 	public:
-		int setup();
-		int newTrack(const char trackName, const float trackLengthInSec);
-		int openStream();
-		int closeStream();
-		int record(const char trackName);
-		int play(const char trackName, const float seconds);
+		void setup();
+		void newTrack(const char trackName, const float trackLengthInSec);
+		void openStream();
+		void closeStream();
+		void record(const char trackName);
+		void play(const char trackName, const float seconds);
 
 	private:
 		RtAudio audio;

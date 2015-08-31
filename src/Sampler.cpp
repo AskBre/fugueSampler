@@ -1,6 +1,6 @@
 #include "Sampler.h"
 
-int Sampler::setup() {
+void Sampler::setup() {
 
 	if (audio.getDeviceCount() < 1 ) {
 		cout << "No audio devices found!" << endl;
@@ -12,11 +12,9 @@ int Sampler::setup() {
 
 	oParams.deviceId = audio.getDefaultOutputDevice();
 	oParams.nChannels = 2;
-
-	return 0;
 }
 
-int Sampler::newTrack(const char trackName, const float trackLengthInSec) {
+void Sampler::newTrack(const char trackName, const float trackLengthInSec) {
 	if(getTrackIndex(trackName) != -1) {
 		cerr << "Trackname " << trackName << " already exists!" << endl;
 		exit(0);
@@ -36,10 +34,9 @@ int Sampler::newTrack(const char trackName, const float trackLengthInSec) {
 
 	tracks.push_back(track);
 	cout << "Added new track " << track.name << endl;
-	return 0;
 }
 
-int Sampler::openStream() {
+void Sampler::openStream() {
 
 	unsigned int nBufferFrames = BUFFER_FRAMES;
 	unsigned int sampleRate = SAMPLE_RATE;
@@ -52,11 +49,9 @@ int Sampler::openStream() {
 		exit(0);
 	}
 	cout << "Audio stream opened" << endl;
-
-	return 0;
 }
 
-int Sampler::closeStream() {
+void Sampler::closeStream() {
 	try {
 		audio.stopStream();
 	} catch(RtAudioError& e) {
@@ -66,11 +61,9 @@ int Sampler::closeStream() {
 	if(audio.isStreamOpen()) audio.closeStream();
 
 	cout << "Audio stream closed" << endl;
-
-	return 0;
 }
 
-int Sampler::record(const char trackName) {
+void Sampler::record(const char trackName) {
 	int i = getTrackIndex(trackName);
 
 	if (i == -1) {
@@ -79,11 +72,9 @@ int Sampler::record(const char trackName) {
 	} else {
 		tracks[i].state = REC;
 	}
-
-	return 0;
 }
 
-int Sampler::play(const char trackName, const float trackLengthInSec) {
+void Sampler::play(const char trackName, const float trackLengthInSec) {
 	int i = getTrackIndex(trackName);
 
 	if (i == -1) {
@@ -93,8 +84,6 @@ int Sampler::play(const char trackName, const float trackLengthInSec) {
 		tracks[i].trackLengthInSec = trackLengthInSec;
 		tracks[i].state = PLAY;
 	}
-
-	return 0;
 }
 
 // Private

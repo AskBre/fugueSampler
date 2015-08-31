@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int main() {
+void main() {
 	Sampler sampler;
 
 	sampler.setup();
@@ -37,6 +37,4 @@ int main() {
 	}
 	
 	sampler.closeStream();
-
-	return 0;
 }
