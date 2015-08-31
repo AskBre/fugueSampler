@@ -10,8 +10,7 @@ int main() {
 	Sampler sampler;
 
 	sampler.setup();
-	sampler.newTrack('a',1);
-	sampler.newTrack('b',1);
+	sampler.newTrack('a',2);
 	sampler.openStream();
 
 	while(1) {
@@ -20,7 +19,6 @@ int main() {
 		switch(input) {
 			case 'r':
 				sampler.record('a');
-				sampler.record('b');
 				break;
 			case 'p':
 				sampler.play('a', 0.25);
@@ -28,6 +26,10 @@ int main() {
 				break;
 			case 's':
 //				audioData.state = STOP;
+				break;
+			case 'q':
+				sampler.closeStream();
+				exit(0);
 				break;
 			default:
 				break;
@@ -38,5 +40,3 @@ int main() {
 
 	return 0;
 }
-
-
