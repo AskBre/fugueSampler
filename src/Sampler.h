@@ -15,7 +15,7 @@ using namespace std;
 class Sampler {
 	public:
 		int setup();
-		int newTrack(const char name, const float seconds);
+		int newTrack(const char trackName, const float trackLengthInSec);
 		int openStream();
 		int closeStream();
 		int record(const char trackName);

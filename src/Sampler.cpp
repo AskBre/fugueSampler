@@ -1,6 +1,5 @@
 #include "Sampler.h"
 
-// Maybe I should move more of this into SamplerTrack?
 int Sampler::setup() {
 
 	if (audio.getDeviceCount() < 1 ) {
@@ -114,6 +113,7 @@ int Sampler::getTrackIndex(const char &name) {
 int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 		double streamTime, RtAudioStreamStatus status, void *userData) {
 
+	// Should I do the casting in SamplerTrack?
 	vector<SamplerTrack> *tracks = static_cast<vector <SamplerTrack> *> (userData);
 	double *inBuffer = static_cast<double*> (inputBuffer);
 	double *outBuffer = static_cast<double*> (outputBuffer);

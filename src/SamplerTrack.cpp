@@ -22,7 +22,7 @@ void SamplerTrack::record(double *inBuffer) {
 
 void SamplerTrack::play(double *outBuffer) {
 	cout << "Playing track " <<  name << endl;
-
+	//						<-- Need to setup track length too!
 	if( iteration < sampleRate/bufferFrames) {
 		for(unsigned i=0; i<bufferFrames; i++) {
 			unsigned j = i + (bufferFrames *  iteration);
@@ -36,9 +36,9 @@ void SamplerTrack::play(double *outBuffer) {
 
 		iteration++;
 	} else {
+		memset(outBuffer, 0, bufferFrames);
 		state = STOP;
 		iteration = 0;
-		memset(outBuffer, 0, bufferFrames);
 	}
 
 }
