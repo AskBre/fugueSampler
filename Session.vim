@@ -13,7 +13,7 @@ badd +1 Make
 badd +9 Makefile
 badd +1 Sampler.h
 badd +1 Sampler.cpp
-badd +2 src/Sampler.cpp
+badd +126 src/Sampler.cpp
 badd +36 src/Sampler.h
 badd +1 Track.h
 badd +1 Track.cpp
@@ -27,8 +27,10 @@ badd +1 src/ClangDiagnostics@14
 badd +1 src/ClangDiagnostics@8
 badd +6 src/MidiHelper.cpp
 badd +10 src/MidiHelper.h
-badd +1 src/FugueSampler.cpp
-badd +0 src/FugueSampler.h
+badd +6 src/FugueSampler.cpp
+badd +1 src/FugueSampler.h
+badd +0 src/SamplerSample.cpp
+badd +0 src/SamplerSample.h
 argglobal
 silent! argdel *
 argadd src/main.cpp
@@ -49,11 +51,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 2 - ((1 * winheight(0) + 64) / 129)
+let s:l = 16 - ((15 * winheight(0) + 64) / 129)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-2
+16
 normal! 0
 lcd ~/Development/C++/fugueSampler
 tabedit ~/Development/C++/fugueSampler/src/FugueSampler.cpp
@@ -78,12 +80,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 64) / 128)
+let s:l = 8 - ((7 * winheight(0) + 64) / 128)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+8
+normal! 037|
 lcd ~/Development/C++/fugueSampler
 wincmd w
 argglobal
@@ -97,15 +99,14 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 64) / 128)
+let s:l = 13 - ((12 * winheight(0) + 64) / 128)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+13
+normal! 017|
 lcd ~/Development/C++/fugueSampler
 wincmd w
-2wincmd w
 exe 'vert 1resize ' . ((&columns * 98 + 98) / 196)
 exe 'vert 2resize ' . ((&columns * 97 + 98) / 196)
 tabedit ~/Development/C++/fugueSampler/src/Sampler.cpp
@@ -137,11 +138,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 2 - ((1 * winheight(0) + 64) / 128)
+let s:l = 1 - ((0 * winheight(0) + 64) / 128)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-2
+1
 normal! 0
 lcd ~/Development/C++/fugueSampler
 wincmd w
@@ -188,7 +189,7 @@ exe '2resize ' . ((&lines * 121 + 65) / 131)
 exe 'vert 2resize ' . ((&columns * 97 + 98) / 196)
 exe '3resize ' . ((&lines * 6 + 65) / 131)
 exe 'vert 3resize ' . ((&columns * 97 + 98) / 196)
-tabedit ~/Development/C++/fugueSampler/src/SamplerTrack.cpp
+tabedit ~/Development/C++/fugueSampler/src/SamplerSample.cpp
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
@@ -219,7 +220,7 @@ normal! 0
 lcd ~/Development/C++/fugueSampler
 wincmd w
 argglobal
-edit ~/Development/C++/fugueSampler/src/SamplerTrack.h
+edit ~/Development/C++/fugueSampler/src/SamplerSample.h
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -229,14 +230,15 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 8 - ((7 * winheight(0) + 64) / 128)
+let s:l = 1 - ((0 * winheight(0) + 64) / 128)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-8
-normal! 018|
+1
+normal! 0
 lcd ~/Development/C++/fugueSampler
 wincmd w
+2wincmd w
 exe 'vert 1resize ' . ((&columns * 98 + 98) / 196)
 exe 'vert 2resize ' . ((&columns * 97 + 98) / 196)
 tabedit ~/Development/C++/fugueSampler/Makefile
@@ -290,7 +292,7 @@ lcd ~/Development/C++/fugueSampler
 wincmd w
 exe 'vert 1resize ' . ((&columns * 97 + 98) / 196)
 exe 'vert 2resize ' . ((&columns * 98 + 98) / 196)
-tabnext 2
+tabnext 4
 set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

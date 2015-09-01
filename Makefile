@@ -1,5 +1,5 @@
 CC=clang++ -std=c++11
-OBJ=src/main.cpp src/FugueSampler.cpp src/Sampler.cpp src/SamplerTrack.cpp
+OBJ=src/main.cpp src/FugueSampler.cpp src/Sampler.cpp src/SamplerSample.cpp
 
 SDIR=src
 IDIR=include
@@ -12,10 +12,10 @@ LIBS=-lmidifile -lrtaudio
 CFLAGS=-I$(IDIR) -L$(LDIR) -g
 
 $(ODIR)/%.o:$(SDIR)/%.cpp $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS) 
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 main:$(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 run:
-	./main 
+	./main
