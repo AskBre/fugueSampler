@@ -14,11 +14,18 @@ using namespace std;
 
 class FugueSampler {
 	public:
-		void setup();
+		void setup(string fileName);
 		void update(unsigned long long tick);
-		void setMidiFile(string newFile);
 		Sampler sampler;
+		bool isDone = false;
+
 	private:
 		MidiFile file;
-		int getUniqueEventCount();
+		unsigned getUniqueEventCount();
+
+		unsigned index = 0;
+
+		unsigned trackCount;
+		unsigned eventCount;
+		vector<unsigned> indices;
 };

@@ -6,16 +6,17 @@ using namespace std;
 
 int main() {
 	FugueSampler fugueSampler;
-	fugueSampler.setup();
-	fugueSampler.setMidiFile("ricercar_6_full.mid");
+	fugueSampler.setup("ricercar_6_full.mid");
 
 	// Miditick
 	unsigned long long tick = 0;
-	while(1) {
+	while(!fugueSampler.isDone) {
 		fugueSampler.update(tick);
 		usleep(1000);
 		tick++;
 	}
+
+	cout << "Well played!" << endl;
 
 	return 0;
 }
