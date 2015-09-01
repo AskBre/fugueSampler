@@ -2,17 +2,18 @@
 
 void SamplerSample::record(double *inBuffer) {
 	cout << "Recording sample " <<  name << endl;
-	if( iteration < sampleRate/bufferFrames) {
+
+	if(iteration < bufferSize) {
 		for(unsigned i=0; i<bufferFrames; i++) {
-			unsigned j = i + (bufferFrames *  iteration);
-			if(j <  bufferSize) {
+			unsigned j = i + (iteration);
+			if(j < bufferSize) {
 				buffer[j] = inBuffer[i];
 			} else {
 				break;
 			}
 		}
 
-		iteration++;
+		iteration += bufferFrames;
 	} else {
 		state = STOP;
 		iteration = 0;
@@ -22,23 +23,21 @@ void SamplerSample::record(double *inBuffer) {
 
 void SamplerSample::play(double *outBuffer) {
 	cout << "Playing sample " <<  name << endl;
-	//						<-- Need to setup sample length too!
-	if( iteration < sampleRate/bufferFrames) {
-		for(unsigned i=0; i<bufferFrames; i++) {
-			unsigned j = i + (bufferFrames *  iteration);
 
-			if(j <  bufferSize) {
-				outBuffer[i] =  buffer[j];
+	if(iteration < bufferSize) {
+		for(unsigned i=0; i<bufferFrames; i++) {
+			unsigned j = i + (iteration);
+			if(j < bufferSize) {
+				outBuffer[i] = buffer[j];
 			} else {
 				break;
 			}
 		}
 
-		iteration++;
+		iteration += bufferFrames
 	} else {
-		memset(outBuffer, 0, bufferFrames);
 		state = STOP;
 		iteration = 0;
+		memset(outBuffer, 0, bufferFrames);
 	}
-
 }

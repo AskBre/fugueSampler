@@ -13,7 +13,7 @@ badd +1 Make
 badd +9 Makefile
 badd +1 Sampler.h
 badd +1 Sampler.cpp
-badd +126 src/Sampler.cpp
+badd +1 src/Sampler.cpp
 badd +36 src/Sampler.h
 badd +1 Track.h
 badd +1 Track.cpp
@@ -27,10 +27,10 @@ badd +1 src/ClangDiagnostics@14
 badd +1 src/ClangDiagnostics@8
 badd +6 src/MidiHelper.cpp
 badd +10 src/MidiHelper.h
-badd +6 src/FugueSampler.cpp
+badd +8 src/FugueSampler.cpp
 badd +1 src/FugueSampler.h
-badd +0 src/SamplerSample.cpp
-badd +0 src/SamplerSample.h
+badd +1 src/SamplerSample.cpp
+badd +1 src/SamplerSample.h
 argglobal
 silent! argdel *
 argadd src/main.cpp
@@ -51,7 +51,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 16 - ((15 * winheight(0) + 64) / 129)
+let s:l = 16 - ((15 * winheight(0) + 65) / 131)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -68,8 +68,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 98 + 98) / 196)
-exe 'vert 2resize ' . ((&columns * 97 + 98) / 196)
+exe 'vert 1resize ' . ((&columns * 98 + 99) / 199)
+exe 'vert 2resize ' . ((&columns * 100 + 99) / 199)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -80,12 +80,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 8 - ((7 * winheight(0) + 64) / 128)
+let s:l = 8 - ((7 * winheight(0) + 65) / 130)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 8
-normal! 037|
+normal! 036|
 lcd ~/Development/C++/fugueSampler
 wincmd w
 argglobal
@@ -99,35 +99,28 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 13 - ((12 * winheight(0) + 64) / 128)
+let s:l = 6 - ((5 * winheight(0) + 65) / 130)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-13
-normal! 017|
+6
+normal! 08|
 lcd ~/Development/C++/fugueSampler
 wincmd w
-exe 'vert 1resize ' . ((&columns * 98 + 98) / 196)
-exe 'vert 2resize ' . ((&columns * 97 + 98) / 196)
+exe 'vert 1resize ' . ((&columns * 98 + 99) / 199)
+exe 'vert 2resize ' . ((&columns * 100 + 99) / 199)
 tabedit ~/Development/C++/fugueSampler/src/Sampler.cpp
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
 1wincmd h
 wincmd w
-wincmd _ | wincmd |
-split
-1wincmd k
-wincmd w
 set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 98 + 98) / 196)
-exe '2resize ' . ((&lines * 121 + 65) / 131)
-exe 'vert 2resize ' . ((&columns * 97 + 98) / 196)
-exe '3resize ' . ((&lines * 6 + 65) / 131)
-exe 'vert 3resize ' . ((&columns * 97 + 98) / 196)
+exe 'vert 1resize ' . ((&columns * 98 + 99) / 199)
+exe 'vert 2resize ' . ((&columns * 100 + 99) / 199)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -138,12 +131,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 64) / 128)
+let s:l = 56 - ((55 * winheight(0) + 65) / 130)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+56
+normal! 030|
 lcd ~/Development/C++/fugueSampler
 wincmd w
 argglobal
@@ -157,38 +150,16 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 31 - ((30 * winheight(0) + 60) / 121)
+let s:l = 28 - ((27 * winheight(0) + 65) / 130)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-31
+28
 normal! 0
 lcd ~/Development/C++/fugueSampler
 wincmd w
-argglobal
-edit ~/Development/C++/fugueSampler/src/ClangDiagnostics@8
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 3) / 6)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-1
-normal! 0
-lcd ~/Development/C++/fugueSampler/src
-wincmd w
-exe 'vert 1resize ' . ((&columns * 98 + 98) / 196)
-exe '2resize ' . ((&lines * 121 + 65) / 131)
-exe 'vert 2resize ' . ((&columns * 97 + 98) / 196)
-exe '3resize ' . ((&lines * 6 + 65) / 131)
-exe 'vert 3resize ' . ((&columns * 97 + 98) / 196)
+exe 'vert 1resize ' . ((&columns * 98 + 99) / 199)
+exe 'vert 2resize ' . ((&columns * 100 + 99) / 199)
 tabedit ~/Development/C++/fugueSampler/src/SamplerSample.cpp
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -199,8 +170,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 98 + 98) / 196)
-exe 'vert 2resize ' . ((&columns * 97 + 98) / 196)
+exe 'vert 1resize ' . ((&columns * 98 + 99) / 199)
+exe 'vert 2resize ' . ((&columns * 100 + 99) / 199)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -211,11 +182,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 64) / 128)
+let s:l = 2 - ((1 * winheight(0) + 65) / 130)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+2
 normal! 0
 lcd ~/Development/C++/fugueSampler
 wincmd w
@@ -230,7 +201,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 64) / 128)
+let s:l = 1 - ((0 * winheight(0) + 65) / 130)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -238,9 +209,8 @@ normal! zt
 normal! 0
 lcd ~/Development/C++/fugueSampler
 wincmd w
-2wincmd w
-exe 'vert 1resize ' . ((&columns * 98 + 98) / 196)
-exe 'vert 2resize ' . ((&columns * 97 + 98) / 196)
+exe 'vert 1resize ' . ((&columns * 98 + 99) / 199)
+exe 'vert 2resize ' . ((&columns * 100 + 99) / 199)
 tabedit ~/Development/C++/fugueSampler/Makefile
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -251,8 +221,10 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 97 + 98) / 196)
-exe 'vert 2resize ' . ((&columns * 98 + 98) / 196)
+exe '1resize ' . ((&lines * 128 + 66) / 133)
+exe 'vert 1resize ' . ((&columns * 97 + 99) / 199)
+exe '2resize ' . ((&lines * 128 + 66) / 133)
+exe 'vert 2resize ' . ((&columns * 98 + 99) / 199)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -290,9 +262,11 @@ normal! zt
 normal! 027|
 lcd ~/Development/C++/fugueSampler
 wincmd w
-exe 'vert 1resize ' . ((&columns * 97 + 98) / 196)
-exe 'vert 2resize ' . ((&columns * 98 + 98) / 196)
-tabnext 4
+exe '1resize ' . ((&lines * 128 + 66) / 133)
+exe 'vert 1resize ' . ((&columns * 97 + 99) / 199)
+exe '2resize ' . ((&lines * 128 + 66) / 133)
+exe 'vert 2resize ' . ((&columns * 98 + 99) / 199)
+tabnext 1
 set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

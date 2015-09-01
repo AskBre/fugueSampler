@@ -5,7 +5,6 @@
 #include <string.h>
 #include <algorithm>
 
-#include "FugueSampler.h"
 #include "SamplerSample.h"
 
 #define SAMPLE_RATE 48000
@@ -13,8 +12,9 @@
 
 using namespace std;
 
-class Sampler : public FugueSampler {
+class Sampler {
 	public:
+		Sampler() {};
 		void setup();
 		void newSample(const char sampleName, const float sampleLengthInSec);
 		void openStream();
@@ -25,6 +25,7 @@ class Sampler : public FugueSampler {
 	private:
 		RtAudio audio;
 		RtAudio::StreamParameters iParams, oParams;
+
 		vector<SamplerSample> samples;
 
 		int getSampleIndex(const char &name);

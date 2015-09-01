@@ -1,18 +1,16 @@
 #pragma once
+
 #include <iostream>
 #include <string.h>
-
-#include "Sampler.h"
 
 enum state_t {STOP, REC, PLAY};
 
 using namespace std;
 
-class SamplerSample : public Sampler {
+class SamplerSample {
 	public:
 		char name;
 		state_t state = STOP;
-		float sampleLengthInSec;
 		unsigned iteration = 0;
 
 		double *buffer;

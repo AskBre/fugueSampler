@@ -1,10 +1,15 @@
 #include "Sampler.h"
 
 void Sampler::setup() {
-
 	if (audio.getDeviceCount() < 1 ) {
 		cout << "No audio devices found!" << endl;
 		exit(0);
+	}
+
+	cout << "Available devices is " << endl;
+	for(unsigned i = 0; i<audio.getDeviceCount(); i++) {
+		RtAudio::DeviceInfo info = audio.getDeviceInfo(i);
+		cout << info.name << endl;
 	}
 
 	// Should I add user-picking of devices?
@@ -24,21 +29,22 @@ void Sampler::newSample(const char sampleName, const float sampleLengthInSec) {
 	SamplerSample sample;
 
 	sample.name = sampleName;
-	sample.bufferSize = (SAMPLE_RATE*sampleLengthInSec) * sizeof(double);
+	sample.bufferSize = SAMPLE_RATE*sampleLengthInSec;
 	sample.sampleRate = SAMPLE_RATE;
 	sample.bufferFrames = BUFFER_FRAMES;
 
-	if(!(sample.buffer = (double *) malloc (sample.bufferSize))) {
-		cout << "Failed to allocate memory" << endl;
+	if(!(sample.buffer = (double *) malloc (sample.bufferSize * sizeof(double)))) {
+		cerr << "Failed to allocate memory" << endl;
 		exit(0);
 	}
+	cout << "Buffersize is " << sample.bufferSize << endl;
+	cout << "Size of buffer is " << sizeof(sample.buffer[0]) << endl;
 
 	samples.push_back(sample);
-	cout << "Added new sample " << sample.name << endl;
+	cout << "Added new sample " << sample.name << " of length " << sampleLengthInSec << endl;
 }
 
 void Sampler::openStream() {
-
 	unsigned int nBufferFrames = BUFFER_FRAMES;
 	unsigned int sampleRate = SAMPLE_RATE;
 	try {
@@ -66,6 +72,7 @@ void Sampler::closeStream() {
 
 void Sampler::record(const char sampleName) {
 	int i = getSampleIndex(sampleName);
+	//						<-- Need to setup sample length too!
 
 	if (i == -1) {
 		cerr << "No sample found with name " << sampleName << endl;
@@ -81,6 +88,8 @@ void Sampler::play(const char sampleName, const float sampleLengthInSec) {
 	if (i == -1) {
 		cerr << "No sample found with name " << sampleName << endl;
 		exit(0);
+	} else if (samples[i].state == REC) {
+		cout << "Can't play sample " << sampleName << " while recording" << endl;
 	} else {
 		samples[i].sampleLengthInSec = sampleLengthInSec;
 		samples[i].state = PLAY;
