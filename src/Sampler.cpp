@@ -7,6 +7,7 @@ void Sampler::setup() {
 		exit(0);
 	}
 
+	// Should I add user-picking of devices?
 	iParams.deviceId = audio.getDefaultInputDevice();
 	iParams.nChannels = 2;
 
@@ -14,26 +15,26 @@ void Sampler::setup() {
 	oParams.nChannels = 2;
 }
 
-void Sampler::newTrack(const char trackName, const float trackLengthInSec) {
-	if(getTrackIndex(trackName) != -1) {
-		cerr << "Trackname " << trackName << " already exists!" << endl;
+void Sampler::newSample(const char sampleName, const float sampleLengthInSec) {
+	if(getSampleIndex(sampleName) != -1) {
+		cerr << "Samplename " << sampleName << " already exists!" << endl;
 		exit(0);
 	}
 
-	SamplerTrack track;
+	SamplerSample sample;
 
-	track.name = trackName;
-	track.bufferSize = (SAMPLE_RATE*trackLengthInSec) * sizeof(double);
-	track.sampleRate = SAMPLE_RATE;
-	track.bufferFrames = BUFFER_FRAMES;
+	sample.name = sampleName;
+	sample.bufferSize = (SAMPLE_RATE*sampleLengthInSec) * sizeof(double);
+	sample.sampleRate = SAMPLE_RATE;
+	sample.bufferFrames = BUFFER_FRAMES;
 
-	if(!(track.buffer = (double *) malloc (track.bufferSize))) {
+	if(!(sample.buffer = (double *) malloc (sample.bufferSize))) {
 		cout << "Failed to allocate memory" << endl;
 		exit(0);
 	}
 
-	tracks.push_back(track);
-	cout << "Added new track " << track.name << endl;
+	samples.push_back(sample);
+	cout << "Added new sample " << sample.name << endl;
 }
 
 void Sampler::openStream() {
@@ -42,7 +43,7 @@ void Sampler::openStream() {
 	unsigned int sampleRate = SAMPLE_RATE;
 	try {
 		audio.openStream( &oParams, &iParams, RTAUDIO_FLOAT32, sampleRate,
-				&nBufferFrames, &recAndPlay, &tracks);
+				&nBufferFrames, &recAndPlay, &samples);
 		audio.startStream();
 	} catch (RtAudioError &error) {
 		error.printMessage();
@@ -63,35 +64,35 @@ void Sampler::closeStream() {
 	cout << "Audio stream closed" << endl;
 }
 
-void Sampler::record(const char trackName) {
-	int i = getTrackIndex(trackName);
+void Sampler::record(const char sampleName) {
+	int i = getSampleIndex(sampleName);
 
 	if (i == -1) {
-		cerr << "No track found with name " << trackName << endl;
+		cerr << "No sample found with name " << sampleName << endl;
 		exit(0);
 	} else {
-		tracks[i].state = REC;
+		samples[i].state = REC;
 	}
 }
 
-void Sampler::play(const char trackName, const float trackLengthInSec) {
-	int i = getTrackIndex(trackName);
+void Sampler::play(const char sampleName, const float sampleLengthInSec) {
+	int i = getSampleIndex(sampleName);
 
 	if (i == -1) {
-		cerr << "No track found with name " << trackName << endl;
+		cerr << "No sample found with name " << sampleName << endl;
 		exit(0);
 	} else {
-		tracks[i].trackLengthInSec = trackLengthInSec;
-		tracks[i].state = PLAY;
+		samples[i].sampleLengthInSec = sampleLengthInSec;
+		samples[i].state = PLAY;
 	}
 }
 
 // Private
 //----------------------------------------------------------------
 
-int Sampler::getTrackIndex(const char &name) {
-	for(int i=0; i<tracks.size(); i++) {
-		if (tracks[i].name == name) return i;
+int Sampler::getSampleIndex(const char &name) {
+	for(int i=0; i<samples.size(); i++) {
+		if (samples[i].name == name) return i;
 	}
 
 	return -1;
@@ -102,22 +103,22 @@ int Sampler::getTrackIndex(const char &name) {
 int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 		double streamTime, RtAudioStreamStatus status, void *userData) {
 
-	// Should I do the casting in SamplerTrack?
-	vector<SamplerTrack> *tracks = static_cast<vector <SamplerTrack> *> (userData);
+	// Should I do the casting in SamplerSample?
+	vector<SamplerSample> *samples = static_cast<vector <SamplerSample> *> (userData);
 	double *inBuffer = static_cast<double*> (inputBuffer);
 	double *outBuffer = static_cast<double*> (outputBuffer);
 
 	if (status) cout << "Stream overflow detected!" << endl;
 
-	for(auto &track : *tracks) {
-		if(track.state == REC) {
-			track.record(inBuffer);
-		} else if (track.state == PLAY) {
-			track.play(outBuffer);
-		} else if (track.state == STOP) {
+	for(auto &sample : *samples) {
+		if(sample.state == REC) {
+			sample.record(inBuffer);
+		} else if (sample.state == PLAY) {
+			sample.play(outBuffer);
+		} else if (sample.state == STOP) {
 			return 0;
 		} else {
-			cout << "Couldn't get state from track" << endl;
+			cout << "Couldn't get state from sample" << endl;
 			exit(0);
 		}
 	}
