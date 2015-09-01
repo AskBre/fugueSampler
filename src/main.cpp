@@ -1,39 +1,17 @@
-#include "MidiFile.h"
-#include "Options.h"
-#include <iostream>
-
-#include "Sampler.h"
+#include "FugueSampler.h"
 
 using namespace std;
 
 void main() {
-	Sampler sampler;
+	FugueSampler fugueSampler;
+	fugueSampler setup();
 
-	sampler.setup();
-	sampler.newTrack('a',2);
-	sampler.openStream();
-
+	// Setup miditick
+	unsigned long long tick = 0;
 	while(1) {
-		char input;
-		cin.get( input );
-		switch(input) {
-			case 'r':
-				sampler.record('a');
-				break;
-			case 'p':
-				sampler.play('a', 0.25);
-//				audioData.state = PLAY;
-				break;
-			case 's':
-//				audioData.state = STOP;
-				break;
-			case 'q':
-				sampler.closeStream();
-				exit(0);
-				break;
-			default:
-				break;
-		}
+		fugueSampler.update(tick);
+		sleep(1000);
+		tick++;
 	}
 	
 	sampler.closeStream();
