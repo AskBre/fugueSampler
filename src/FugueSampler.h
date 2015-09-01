@@ -7,15 +7,16 @@
 #include <signal.h>
 
 #include "MidiFile.h"
+
 #include "Sampler.h"
 
 using namespace std;
 
 class FugueSampler {
 	public:
-		FugueSampler() {};
 		void setup();
 		void update(unsigned long long tick);
+		void setMidiFile(string newFile);
 		Sampler sampler;
 	private:
 		MidiFile file;

@@ -7,8 +7,9 @@ using namespace std;
 int main() {
 	FugueSampler fugueSampler;
 	fugueSampler.setup();
+	fugueSampler.setMidiFile("ricercar_6_full.mid");
 
-	// Setup miditick
+	// Miditick
 	unsigned long long tick = 0;
 	while(1) {
 		fugueSampler.update(tick);
