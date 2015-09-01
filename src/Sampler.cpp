@@ -91,7 +91,8 @@ void Sampler::play(const char sampleName, const float sampleLengthInSec) {
 	} else if (samples[i].state == REC) {
 		cout << "Can't play sample " << sampleName << " while recording" << endl;
 	} else {
-		samples[i].sampleLengthInSec = sampleLengthInSec;
+		float sampleLengthInFrames = sampleLengthInSec * SAMPLE_RATE;
+		samples[i].sampleLengthInFrames = sampleLengthInFrames;
 		samples[i].state = PLAY;
 	}
 }

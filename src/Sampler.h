@@ -14,7 +14,6 @@ using namespace std;
 
 class Sampler {
 	public:
-		Sampler() {};
 		void setup();
 		void newSample(const char sampleName, const float sampleLengthInSec);
 		void openStream();

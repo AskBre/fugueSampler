@@ -24,7 +24,7 @@ void SamplerSample::record(double *inBuffer) {
 void SamplerSample::play(double *outBuffer) {
 	cout << "Playing sample " <<  name << endl;
 
-	if(iteration < bufferSize) {
+	if(iteration < sampleLengthInFrames) {
 		for(unsigned i=0; i<bufferFrames; i++) {
 			unsigned j = i + (iteration);
 			if(j < bufferSize) {
@@ -34,7 +34,7 @@ void SamplerSample::play(double *outBuffer) {
 			}
 		}
 
-		iteration += bufferFrames
+		iteration += bufferFrames;
 	} else {
 		state = STOP;
 		iteration = 0;
