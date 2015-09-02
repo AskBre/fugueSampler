@@ -18,6 +18,7 @@ class SamplerSample {
 		unsigned sampleRate;
 		unsigned bufferFrames;
 		float sampleLengthInFrames;
+		bool isRecorded = false;
 
 		void record(double *inBuffer);
 		void play(double *outBuffer);

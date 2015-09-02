@@ -20,12 +20,13 @@ class Sampler {
 		void closeStream();
 		void record(const char sampleName);
 		void play(const char sampleName, const float seconds);
+		bool isRecorded(const char &name);
 
 	private:
+		vector<SamplerSample> samples;
+
 		RtAudio audio;
 		RtAudio::StreamParameters iParams, oParams;
-
-		vector<SamplerSample> samples;
 
 		int getSampleIndex(const char &name);
 };

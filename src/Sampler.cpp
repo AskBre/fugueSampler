@@ -22,8 +22,8 @@ void Sampler::setup() {
 
 void Sampler::newSample(const char sampleName, const float sampleLengthInSec) {
 	if(getSampleIndex(sampleName) != -1) {
-		cerr << "Samplename " << sampleName << " already exists!" << endl;
-		exit(0);
+		cerr << "Samplename " << (unsigned)sampleName << " already exists!" << endl;
+		return;
 	}
 
 	SamplerSample sample;
@@ -37,11 +37,9 @@ void Sampler::newSample(const char sampleName, const float sampleLengthInSec) {
 		cerr << "Failed to allocate memory" << endl;
 		exit(0);
 	}
-	cout << "Buffersize is " << sample.bufferSize << endl;
-	cout << "Size of buffer is " << sizeof(sample.buffer[0]) << endl;
 
 	samples.push_back(sample);
-	cout << "Added new sample " << sample.name << " of length " << sampleLengthInSec << endl;
+	cout << "Added new sample " << (unsigned) sample.name << " of length " << sampleLengthInSec << endl;
 }
 
 void Sampler::openStream() {
@@ -49,7 +47,7 @@ void Sampler::openStream() {
 	unsigned int sampleRate = SAMPLE_RATE;
 	try {
 		audio.openStream( &oParams, &iParams, RTAUDIO_FLOAT32, sampleRate,
-				&nBufferFrames, &recAndPlay, &samples);
+				&nBufferFrames, &recAndPlay, static_cast<void*>(&samples));
 		audio.startStream();
 	} catch (RtAudioError &error) {
 		error.printMessage();
@@ -72,7 +70,6 @@ void Sampler::closeStream() {
 
 void Sampler::record(const char sampleName) {
 	int i = getSampleIndex(sampleName);
-	//						<-- Need to setup sample length too!
 
 	if (i == -1) {
 		cerr << "No sample found with name " << sampleName << endl;
@@ -97,9 +94,12 @@ void Sampler::play(const char sampleName, const float sampleLengthInSec) {
 	}
 }
 
+bool Sampler::isRecorded(const char &name) {
+	return samples.at(getSampleIndex(name)).isRecorded;
+}
+
 // Private
 //----------------------------------------------------------------
-
 int Sampler::getSampleIndex(const char &name) {
 	for(int i=0; i<samples.size(); i++) {
 		if (samples[i].name == name) return i;
@@ -113,20 +113,23 @@ int Sampler::getSampleIndex(const char &name) {
 int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 		double streamTime, RtAudioStreamStatus status, void *userData) {
 
-	// Should I do the casting in SamplerSample?
 	vector<SamplerSample> *samples = static_cast<vector <SamplerSample> *> (userData);
+//	samples->resize(136);
 	double *inBuffer = static_cast<double*> (inputBuffer);
 	double *outBuffer = static_cast<double*> (outputBuffer);
 
 	if (status) cout << "Stream overflow detected!" << endl;
 
+//	cout << "The sample size is " << samples->size() << endl;
+
 	for(auto &sample : *samples) {
+//		cout << "This is sample " << (unsigned) sample.name << " with size "
+//			<< sample.bufferSize << endl;
 		if(sample.state == REC) {
 			sample.record(inBuffer);
 		} else if (sample.state == PLAY) {
 			sample.play(outBuffer);
 		} else if (sample.state == STOP) {
-			return 0;
 		} else {
 			cout << "Couldn't get state from sample" << endl;
 			exit(0);

@@ -14,16 +14,15 @@ void FugueSampler::setup(string fileName) {
 
 	sampler.setup();
 
+	allocateSamples();
+
+	sampler.openStream();
+
 	/*
 	sampler.newSample('a',1);
-	sampler.openStream();
 	sampler.record('a');
 	sampler.play('a', 5);
-	sampler.closeStream();
 	*/
-
-//	const unsigned uniqueEventCount = getUniqueEventCount();
-//	cout << "Unique event count is " << uniqueEventCount << endl;
 }
 
 void FugueSampler::update(unsigned long long tick) {
@@ -34,11 +33,24 @@ void FugueSampler::update(unsigned long long tick) {
 				MidiEvent event = file.getEvent(track, index);
 				float duration = file[track][index].getDurationInSeconds();
 				if(event.tick < tick) {
-					cout << tick << "  Found event "
-						<< (unsigned)event.at(1)
+					const char name = event.at(1);
+
+					if(sampler.isRecorded(name)) {
+						sampler.play(name, duration);
+						cout << "Playing event "
+						<< (unsigned)name
 						<< " with duration "
 						<< duration
 						<< endl;
+
+					} else {
+						sampler.record(name);
+						cout << "Recording event "
+						<< (unsigned)name
+						<< " with duration "
+						<< duration
+						<< endl;
+					}
 
 					indices.at(track)++;
 				}
@@ -50,31 +62,34 @@ void FugueSampler::update(unsigned long long tick) {
 }
 
 //----------------------------------------------------------------
-unsigned FugueSampler::getUniqueEventCount() {
+void FugueSampler::allocateSamples() {
 	vector< vector<unsigned char> > cache;
-	cout << "Eventcount is " << file.getEventCount(0) << endl;
 
-	for(int i=0; i<file.getEventCount(0); i++) {
-		if(file[0][i].isNoteOn()) {
-			cout << "Getting event " << i;
+	for(unsigned t=0; t<file.getTrackCount(); t++) {
+		cout << endl << "Filling from track " << t << endl;
 
-			cout << "(";
-			vector<unsigned char> event;
-			for(auto m : file[0][i]) {
-				cout << (unsigned) m << " ";
-				event.push_back(m);
-			}
-			cout << ")" << endl;
+		for(unsigned e=0; e<file.getEventCount(t); e++) {
+			if(file[t][e].isNoteOn()) {
 
-			bool isPresent = find(cache.begin(), cache.end(), event)
-				!= cache.end();
+				vector<unsigned char> event;
+				for(auto m : file[t][e]) {
+					event.push_back(m);
+				}
 
-			if(!isPresent) {
-				cache.push_back(event);
-				cout << (unsigned)event[1] << " is unique!" << endl;
+				bool isPresent = find(cache.begin(), cache.end(), event)
+					!= cache.end();
+
+				if(!isPresent) {
+					cache.push_back(event);
+
+					float duration = file[t][e].getDurationInSeconds();
+					char name = file[t][e][1];
+
+					sampler.newSample(name, duration);
+				}
 			}
 		}
 	}
 
-	return cache.size();
+	cout << "Filled " << cache.size() << " samples" << endl;
 }

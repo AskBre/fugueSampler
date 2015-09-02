@@ -21,7 +21,7 @@ class FugueSampler {
 
 	private:
 		MidiFile file;
-		unsigned getUniqueEventCount();
+		void allocateSamples();
 
 		unsigned index = 0;
 

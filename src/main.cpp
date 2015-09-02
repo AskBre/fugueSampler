@@ -16,6 +16,7 @@ int main() {
 		tick++;
 	}
 
+	fugueSampler.sampler.closeStream();
 	cout << "Well played!" << endl;
 
 	return 0;

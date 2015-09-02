@@ -1,8 +1,6 @@
 #include "SamplerSample.h"
 
 void SamplerSample::record(double *inBuffer) {
-	cout << "Recording sample " <<  name << endl;
-
 	if(iteration < bufferSize) {
 		for(unsigned i=0; i<bufferFrames; i++) {
 			unsigned j = i + (iteration);
@@ -18,17 +16,18 @@ void SamplerSample::record(double *inBuffer) {
 		state = STOP;
 		iteration = 0;
 		memset(inBuffer, 0, bufferFrames);
+		isRecorded = true;
 	}
+
 }
 
 void SamplerSample::play(double *outBuffer) {
-	cout << "Playing sample " <<  name << endl;
-
 	if(iteration < sampleLengthInFrames) {
 		for(unsigned i=0; i<bufferFrames; i++) {
 			unsigned j = i + (iteration);
 			if(j < bufferSize) {
 				outBuffer[i] = buffer[j];
+				outBuffer[i+bufferFrames] = buffer[j];
 			} else {
 				break;
 			}
