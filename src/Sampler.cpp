@@ -5,16 +5,16 @@ void Sampler::setup() {
 		cout << "No audio devices found!" << endl;
 		exit(0);
 	}
-
 	cout << "Available devices is " << endl;
 	for(unsigned i = 0; i<audio.getDeviceCount(); i++) {
+
 		RtAudio::DeviceInfo info = audio.getDeviceInfo(i);
 		cout << info.name << endl;
 	}
 
 	// Should I add user-picking of devices?
 	iParams.deviceId = audio.getDefaultInputDevice();
-	iParams.nChannels = 2;
+	iParams.nChannels = 1;
 
 	oParams.deviceId = audio.getDefaultOutputDevice();
 	oParams.nChannels = 2;

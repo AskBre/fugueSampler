@@ -3,7 +3,7 @@
 void SamplerSample::record(double *inBuffer) {
 	if(iteration < bufferSize) {
 		for(unsigned i=0; i<bufferFrames; i++) {
-			unsigned j = i + (iteration);
+			unsigned j = i + iteration;
 			if(j < bufferSize) {
 				buffer[j] = inBuffer[i];
 			} else {
@@ -23,13 +23,12 @@ void SamplerSample::record(double *inBuffer) {
 
 void SamplerSample::play(double *outBuffer) {
 	if(iteration < sampleLengthInFrames) {
-		for(unsigned i=0; i<bufferFrames; i++) {
-			unsigned j = i + (iteration);
+		for(unsigned i=0; i<bufferFrames; i+=2) {
+			unsigned j = (i/2) + iteration;
 			if(j < bufferSize) {
 				outBuffer[i] = buffer[j];
-				outBuffer[i+bufferFrames] = buffer[j];
+				outBuffer[i+1] = buffer[j];
 			} else {
-				break;
 			}
 		}
 
