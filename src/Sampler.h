@@ -12,6 +12,11 @@
 
 using namespace std;
 
+struct audioData_t {
+	vector<SamplerSample> samples;
+	double *inBuffer;
+};
+
 class Sampler {
 	public:
 		void setup();
@@ -29,7 +34,7 @@ class Sampler {
 	private:
 		int getSampleIndex(const char &name);
 
-		vector<SamplerSample> samples;
+		audioData_t audioData;
 
 		RtAudio audio;
 		RtAudio::StreamParameters iParams, oParams;

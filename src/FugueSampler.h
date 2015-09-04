@@ -10,7 +10,11 @@
 
 #include "Sampler.h"
 
+#define THRES 0.1
+
 using namespace std;
+
+enum runState_t { IDLE, RUN, STOPPED };
 
 class FugueSampler {
 	public:
@@ -29,6 +33,6 @@ class FugueSampler {
 		unsigned nTracks;
 		unsigned nEvents = 0;
 		unsigned eventCounter;
-		unsigned oldPercent;
+		unsigned oldPercent = 100;
 		vector<unsigned> indices;
 };

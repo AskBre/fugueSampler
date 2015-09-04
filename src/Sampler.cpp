@@ -18,6 +18,9 @@ void Sampler::setup() {
 
 	oParams.deviceId = audio.getDefaultOutputDevice();
 	oParams.nChannels = 2;
+
+	if(!(audioData.inBuffer = (double *) malloc (BUFFER_FRAMES * sizeof(double)))) {
+	}
 }
 
 void Sampler::openStream() {
@@ -25,12 +28,13 @@ void Sampler::openStream() {
 	unsigned int sampleRate = SAMPLE_RATE;
 	try {
 		audio.openStream( &oParams, &iParams, RTAUDIO_FLOAT64, sampleRate,
-				&nBufferFrames, &recAndPlay, static_cast<void*>(&samples));
+				&nBufferFrames, &recAndPlay, static_cast<void*>(&audioData));
 		audio.startStream();
 	} catch (RtAudioError &error) {
 		error.printMessage();
 		exit(0);
 	}
+
 	cout << "Audio stream opened" << endl;
 }
 
@@ -65,7 +69,7 @@ void Sampler::newSample(const char sampleName, const float sampleLengthInSec) {
 		exit(0);
 	}
 
-	samples.push_back(sample);
+	audioData.samples.push_back(sample);
 	cout << "Added new sample " << (unsigned) sample.name << " of length " << sampleLengthInSec << endl;
 }
 
@@ -77,7 +81,7 @@ void Sampler::record(const char sampleName) {
 		cerr << "No sample found with name " << sampleName << endl;
 		exit(0);
 	} else {
-		samples[i].state = REC;
+		audioData.samples[i].state = REC;
 	}
 }
 
@@ -87,22 +91,26 @@ void Sampler::play(const char sampleName, const float sampleLengthInSec) {
 	if (i == -1) {
 		cerr << "No sample found with name " << sampleName << endl;
 		exit(0);
-	} else if (samples[i].state == REC) {
+	} else if (audioData.samples[i].state == REC) {
 		cerr << "Can't play sample " << sampleName << " while recording" << endl;
 	} else {
 		float sampleLengthInFrames = sampleLengthInSec * SAMPLE_RATE;
-		samples[i].sampleLengthInFrames = sampleLengthInFrames;
-		samples[i].state = PLAY;
+		audioData.samples[i].sampleLengthInFrames = sampleLengthInFrames;
+		audioData.samples[i].state = PLAY;
 	}
 }
 
 //----------------------------------------------------------------
 bool Sampler::isRecorded(const char &name) {
-	return samples.at(getSampleIndex(name)).isRecorded;
+	return audioData.samples.at(getSampleIndex(name)).isRecorded;
 }
 
 double Sampler::getAmplitude() {
 
+	double amp = 0;
+	for(int i=0; i<BUFFER_FRAMES; i++) {
+		if(audioData.inBuffer[i] > amp) amp = audioData.inBuffer[i];
+	}
 
 	return amp;
 }
@@ -110,8 +118,8 @@ double Sampler::getAmplitude() {
 // Private
 //----------------------------------------------------------------
 int Sampler::getSampleIndex(const char &name) {
-	for(int i=0; i<samples.size(); i++) {
-		if (samples[i].name == name) return i;
+	for(int i=0; i<audioData.samples.size(); i++) {
+		if (audioData.samples[i].name == name) return i;
 	}
 
 	return -1;
@@ -122,9 +130,13 @@ int Sampler::getSampleIndex(const char &name) {
 int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
 		double streamTime, RtAudioStreamStatus status, void *userData) {
 
-	vector<SamplerSample> *samples = static_cast<vector <SamplerSample> *> (userData);
+	audioData_t *audioData = static_cast<audioData_t*> (userData);
+	vector<SamplerSample> *samples = &audioData->samples;
+
 	double *inBuffer = static_cast<double*> (inputBuffer);
 	double *outBuffer = static_cast<double*> (outputBuffer);
+	audioData->inBuffer = inBuffer;
+
 	memset(outputBuffer, 0, nBufferFrames * 2 * sizeof(double));
 
 	if (status) cerr << "Stream overflow detected!" << endl;

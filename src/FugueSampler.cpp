@@ -50,6 +50,7 @@ void FugueSampler::update(unsigned long long tick) {
 					if(percent!=oldPercent) {
 						cout << percent << "%" << endl;
 					}
+
 					oldPercent = percent;
 				}
 			} else {
@@ -60,7 +61,11 @@ void FugueSampler::update(unsigned long long tick) {
 }
 
 void FugueSampler::ampDetect() {
-	sampler.getAmplitude();
+	double amp = sampler.getAmplitude();
+	cout << amp << endl;
+	if(amp > THRES) {
+		runState = RUN;
+	}
 }
 
 //----------------------------------------------------------------
