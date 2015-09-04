@@ -12,7 +12,6 @@ void Sampler::setup() {
 		cout << info.name << endl;
 	}
 
-	// Should I add user-picking of devices?
 	iParams.deviceId = audio.getDefaultInputDevice();
 	iParams.nChannels = 1;
 
@@ -46,7 +45,7 @@ void Sampler::openStream() {
 	unsigned int nBufferFrames = BUFFER_FRAMES;
 	unsigned int sampleRate = SAMPLE_RATE;
 	try {
-		audio.openStream( &oParams, &iParams, RTAUDIO_FLOAT32, sampleRate,
+		audio.openStream( &oParams, &iParams, RTAUDIO_FLOAT64, sampleRate,
 				&nBufferFrames, &recAndPlay, static_cast<void*>(&samples));
 		audio.startStream();
 	} catch (RtAudioError &error) {
@@ -114,17 +113,15 @@ int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrame
 		double streamTime, RtAudioStreamStatus status, void *userData) {
 
 	vector<SamplerSample> *samples = static_cast<vector <SamplerSample> *> (userData);
-//	samples->resize(136);
 	double *inBuffer = static_cast<double*> (inputBuffer);
 	double *outBuffer = static_cast<double*> (outputBuffer);
+	memset(outputBuffer, 0, nBufferFrames * 2 * sizeof(double));
 
 	if (status) cout << "Stream overflow detected!" << endl;
 
 //	cout << "The sample size is " << samples->size() << endl;
 
 	for(auto &sample : *samples) {
-//		cout << "This is sample " << (unsigned) sample.name << " with size "
-//			<< sample.bufferSize << endl;
 		if(sample.state == REC) {
 			sample.record(inBuffer);
 		} else if (sample.state == PLAY) {
