@@ -15,20 +15,24 @@ using namespace std;
 class Sampler {
 	public:
 		void setup();
-		void newSample(const char sampleName, const float sampleLengthInSec);
 		void openStream();
 		void closeStream();
+
+		void newSample(const char sampleName, const float sampleLengthInSec);
+
 		void record(const char sampleName);
 		void play(const char sampleName, const float seconds);
+
 		bool isRecorded(const char &name);
+		double getAmplitude();
 
 	private:
+		int getSampleIndex(const char &name);
+
 		vector<SamplerSample> samples;
 
 		RtAudio audio;
 		RtAudio::StreamParameters iParams, oParams;
-
-		int getSampleIndex(const char &name);
 };
 
 int recAndPlay(void *outputBuffer, void *inputBuffer,

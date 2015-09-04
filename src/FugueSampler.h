@@ -16,8 +16,9 @@ class FugueSampler {
 	public:
 		void setup(string fileName);
 		void update(unsigned long long tick);
+		void ampDetect();
 		Sampler sampler;
-		bool isDone = false;
+		runState_t runState = IDLE;
 
 	private:
 		MidiFile file;

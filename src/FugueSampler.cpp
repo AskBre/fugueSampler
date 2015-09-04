@@ -59,6 +59,10 @@ void FugueSampler::update(unsigned long long tick) {
 	}
 }
 
+void FugueSampler::ampDetect() {
+	sampler.getAmplitude();
+}
+
 //----------------------------------------------------------------
 void FugueSampler::allocateSamples() {
 	vector< vector<unsigned char> > cache;

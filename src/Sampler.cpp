@@ -20,28 +20,6 @@ void Sampler::setup() {
 	oParams.nChannels = 2;
 }
 
-void Sampler::newSample(const char sampleName, const float sampleLengthInSec) {
-	if(getSampleIndex(sampleName) != -1) {
-		cerr << "Samplename " << (unsigned)sampleName << " already exists!" << endl;
-		return;
-	}
-
-	SamplerSample sample;
-
-	sample.name = sampleName;
-	sample.bufferSize = SAMPLE_RATE*4;
-	sample.sampleRate = SAMPLE_RATE;
-	sample.bufferFrames = BUFFER_FRAMES;
-
-	if(!(sample.buffer = (double *) malloc (sample.bufferSize * sizeof(double)))) {
-		cerr << "Failed to allocate memory" << endl;
-		exit(0);
-	}
-
-	samples.push_back(sample);
-	cout << "Added new sample " << (unsigned) sample.name << " of length " << sampleLengthInSec << endl;
-}
-
 void Sampler::openStream() {
 	unsigned int nBufferFrames = BUFFER_FRAMES;
 	unsigned int sampleRate = SAMPLE_RATE;
@@ -68,6 +46,30 @@ void Sampler::closeStream() {
 	cout << "Audio stream closed" << endl;
 }
 
+//----------------------------------------------------------------
+void Sampler::newSample(const char sampleName, const float sampleLengthInSec) {
+	if(getSampleIndex(sampleName) != -1) {
+		cerr << "Samplename " << (unsigned)sampleName << " already exists!" << endl;
+		return;
+	}
+
+	SamplerSample sample;
+
+	sample.name = sampleName;
+	sample.bufferSize = SAMPLE_RATE*4;
+	sample.sampleRate = SAMPLE_RATE;
+	sample.bufferFrames = BUFFER_FRAMES;
+
+	if(!(sample.buffer = (double *) malloc (sample.bufferSize * sizeof(double)))) {
+		cerr << "Failed to allocate memory" << endl;
+		exit(0);
+	}
+
+	samples.push_back(sample);
+	cout << "Added new sample " << (unsigned) sample.name << " of length " << sampleLengthInSec << endl;
+}
+
+//----------------------------------------------------------------
 void Sampler::record(const char sampleName) {
 	int i = getSampleIndex(sampleName);
 
@@ -94,8 +96,15 @@ void Sampler::play(const char sampleName, const float sampleLengthInSec) {
 	}
 }
 
+//----------------------------------------------------------------
 bool Sampler::isRecorded(const char &name) {
 	return samples.at(getSampleIndex(name)).isRecorded;
+}
+
+double Sampler::getAmplitude() {
+
+
+	return amp;
 }
 
 // Private
