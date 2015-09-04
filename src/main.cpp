@@ -14,7 +14,6 @@ int main() {
 		fugueSampler.update(tick);
 		usleep(1000);
 		tick++;
-		
 	}
 
 	fugueSampler.sampler.closeStream();

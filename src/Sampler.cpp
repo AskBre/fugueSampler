@@ -2,7 +2,7 @@
 
 void Sampler::setup() {
 	if (audio.getDeviceCount() < 1 ) {
-		cout << "No audio devices found!" << endl;
+		cerr << "No audio devices found!" << endl;
 		exit(0);
 	}
 	cout << "Available devices is " << endl;
@@ -11,6 +11,7 @@ void Sampler::setup() {
 		RtAudio::DeviceInfo info = audio.getDeviceInfo(i);
 		cout << info.name << endl;
 	}
+	cout << endl;
 
 	iParams.deviceId = audio.getDefaultInputDevice();
 	iParams.nChannels = 1;
@@ -28,7 +29,7 @@ void Sampler::newSample(const char sampleName, const float sampleLengthInSec) {
 	SamplerSample sample;
 
 	sample.name = sampleName;
-	sample.bufferSize = SAMPLE_RATE*sampleLengthInSec;
+	sample.bufferSize = SAMPLE_RATE*4;
 	sample.sampleRate = SAMPLE_RATE;
 	sample.bufferFrames = BUFFER_FRAMES;
 
@@ -85,7 +86,7 @@ void Sampler::play(const char sampleName, const float sampleLengthInSec) {
 		cerr << "No sample found with name " << sampleName << endl;
 		exit(0);
 	} else if (samples[i].state == REC) {
-		cout << "Can't play sample " << sampleName << " while recording" << endl;
+		cerr << "Can't play sample " << sampleName << " while recording" << endl;
 	} else {
 		float sampleLengthInFrames = sampleLengthInSec * SAMPLE_RATE;
 		samples[i].sampleLengthInFrames = sampleLengthInFrames;
@@ -117,9 +118,7 @@ int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrame
 	double *outBuffer = static_cast<double*> (outputBuffer);
 	memset(outputBuffer, 0, nBufferFrames * 2 * sizeof(double));
 
-	if (status) cout << "Stream overflow detected!" << endl;
-
-//	cout << "The sample size is " << samples->size() << endl;
+	if (status) cerr << "Stream overflow detected!" << endl;
 
 	for(auto &sample : *samples) {
 		if(sample.state == REC) {
@@ -128,7 +127,7 @@ int recAndPlay( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrame
 			sample.play(outBuffer);
 		} else if (sample.state == STOP) {
 		} else {
-			cout << "Couldn't get state from sample" << endl;
+			cerr << "Couldn't get state from sample" << endl;
 			exit(0);
 		}
 	}

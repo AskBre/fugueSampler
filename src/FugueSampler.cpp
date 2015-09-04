@@ -9,8 +9,8 @@ void FugueSampler::setup(string fileName) {
 	file.doTimeAnalysis();
 	file.linkNotePairs();
 
-	trackCount = file.getTrackCount();
-	indices.resize(trackCount);
+	nTracks = file.getTrackCount();
+	indices.resize(nTracks);
 
 	sampler.setup();
 
@@ -26,7 +26,7 @@ void FugueSampler::setup(string fileName) {
 }
 
 void FugueSampler::update(unsigned long long tick) {
-	for(unsigned track=0; track < trackCount; track++) {
+	for(unsigned track=0; track < nTracks; track++) {
 		unsigned index = indices.at(track);
 		if(file.getEventCount(track) > index) {
 			if(file[track][index].isNoteOn()) {
@@ -37,22 +37,20 @@ void FugueSampler::update(unsigned long long tick) {
 
 					if(sampler.isRecorded(name)) {
 						sampler.play(name, duration);
-						cout << "Playing event "
-						<< (unsigned)name
-						<< " with duration "
-						<< duration
-						<< endl;
-
 					} else {
 						sampler.record(name);
-						cout << "Recording event "
-						<< (unsigned)name
-						<< " with duration "
-						<< duration
-						<< endl;
+						cout << "REC" << endl;
 					}
 
 					indices.at(track)++;
+					eventCounter++;
+
+					unsigned percent =
+						(float)eventCounter/(float)nEvents*100;
+					if(percent!=oldPercent) {
+						cout << percent << "%" << endl;
+					}
+					oldPercent = percent;
 				}
 			} else {
 				indices.at(track)++;
@@ -66,10 +64,9 @@ void FugueSampler::allocateSamples() {
 	vector< vector<unsigned char> > cache;
 
 	for(unsigned t=0; t<file.getTrackCount(); t++) {
-		cout << endl << "Filling from track " << t << endl;
-
 		for(unsigned e=0; e<file.getEventCount(t); e++) {
 			if(file[t][e].isNoteOn()) {
+				nEvents++;
 
 				vector<unsigned char> event;
 				for(auto m : file[t][e]) {

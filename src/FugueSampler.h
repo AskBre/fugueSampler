@@ -25,7 +25,9 @@ class FugueSampler {
 
 		unsigned index = 0;
 
-		unsigned trackCount;
-		unsigned eventCount;
+		unsigned nTracks;
+		unsigned nEvents = 0;
+		unsigned eventCounter;
+		unsigned oldPercent;
 		vector<unsigned> indices;
 };
