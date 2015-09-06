@@ -14,7 +14,7 @@ void Sampler::setup() {
 	cout << endl;
 
 	iParams.deviceId = audio.getDefaultInputDevice();
-	iParams.nChannels = 1;
+	iParams.nChannels = 2;
 
 	oParams.deviceId = audio.getDefaultOutputDevice();
 	oParams.nChannels = 2;
