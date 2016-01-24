@@ -10,7 +10,7 @@
 
 #include "Sampler.h"
 
-#define THRES 0.1
+#define THRES 0.05
 
 using namespace std;
 
