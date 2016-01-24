@@ -1,0 +1,1 @@
+This code takes a midi file as input, and plays it back. However, instead of synthesizing a tone when a note is played, it records sound. When the playhead hits a note that has already been recorded, this sample is played back.
