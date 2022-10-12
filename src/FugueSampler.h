@@ -25,7 +25,7 @@ class FugueSampler {
 		runState_t runState = IDLE;
 
 	private:
-		MidiFile file;
+		smf::MidiFile file;
 		void allocateSamples();
 
 		unsigned index = 0;

@@ -30,7 +30,7 @@ void FugueSampler::update(unsigned long long tick) {
 		unsigned index = indices.at(track);
 		if(file.getEventCount(track) > index) {
 			if(file[track][index].isNoteOn()) {
-				MidiEvent event = file.getEvent(track, index);
+				smf::MidiEvent event = file.getEvent(track, index);
 				float duration = file[track][index].getDurationInSeconds();
 				if(event.tick < tick) {
 					const char name = event.at(1);
