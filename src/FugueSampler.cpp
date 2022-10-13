@@ -1,9 +1,12 @@
 #include "FugueSampler.h"
 
-void FugueSampler::setup(string fileName) {
+void FugueSampler::setup(string fileName, bool _shouldLoop) {
+	shouldLoop = _shouldLoop;
+
 	file.read(fileName);
 	if(!file.status()) {
-		cerr << "Error reading MIDI file" << endl;
+		cerr << "Error reading MIDI file " << fileName << endl;
+		exit(2);
 	}
 
 	file.doTimeAnalysis();
@@ -18,11 +21,6 @@ void FugueSampler::setup(string fileName) {
 
 	sampler.openStream();
 
-	/*
-	sampler.newSample('a',1);
-	sampler.record('a');
-	sampler.play('a', 5);
-	*/
 }
 
 void FugueSampler::update(unsigned long long tick) {
@@ -30,8 +28,10 @@ void FugueSampler::update(unsigned long long tick) {
 		unsigned index = indices.at(track);
 		if(file.getEventCount(track) > index) {
 			if(file[track][index].isNoteOn()) {
+
 				smf::MidiEvent event = file.getEvent(track, index);
 				float duration = file[track][index].getDurationInSeconds();
+
 				if(event.tick < tick) {
 					const char name = event.at(1);
 
@@ -56,6 +56,10 @@ void FugueSampler::update(unsigned long long tick) {
 			} else {
 				indices.at(track)++;
 			}
+		} else if (shouldLoop) {
+			runState = REACHED_END;
+			eventCounter = 0;
+			indices.at(track) = 0;
 		}
 	}
 }

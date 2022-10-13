@@ -5,10 +5,16 @@
 using namespace std;
 
 
-int main() {
+int main(int argc, char *argv[] ) {
 	FugueSampler fugueSampler;
+	bool shouldLoop = true;
 
-	fugueSampler.setup("ricercar_6_full.mid");
+	if(argc){
+		fugueSampler.setup(argv[1], shouldLoop);
+	} else {
+		cout << "Need input midi file" << endl;
+		exit(1);
+	}
 
 	while(fugueSampler.runState == IDLE) {
 		usleep(100000);
@@ -21,6 +27,8 @@ int main() {
 		fugueSampler.update(tick);
 		usleep(1000);
 		tick++;
+
+		if(fugueSampler.runState == REACHED_END) tick = 0;
 	}
 
 	fugueSampler.sampler.closeStream();
