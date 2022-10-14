@@ -20,7 +20,6 @@ void FugueSampler::setup(string fileName, bool _shouldLoop) {
 	allocateSamples();
 
 	sampler.openStream();
-
 }
 
 void FugueSampler::update(unsigned long long tick) {
@@ -36,10 +35,11 @@ void FugueSampler::update(unsigned long long tick) {
 					const char name = event.at(1);
 
 					if(sampler.isRecorded(name)) {
+						cout << "Playing " << name << endl;
 						sampler.play(name, duration);
 					} else {
 						sampler.record(name);
-						cout << "REC" << endl;
+						cout << "Recording " << name << endl;
 					}
 
 					indices.at(track)++;
@@ -56,7 +56,8 @@ void FugueSampler::update(unsigned long long tick) {
 			} else {
 				indices.at(track)++;
 			}
-		} else if (shouldLoop) {
+		} else if (shouldLoop && index > nEvents) {
+			cout << "LOooooooOOOOOOoooooooooooooooOOooooooooooooooooOOooooooOOooOOOOOOooooooooooooooping!" << endl;
 			runState = REACHED_END;
 			eventCounter = 0;
 			indices.at(track) = 0;
@@ -70,6 +71,9 @@ void FugueSampler::ampDetect() {
 	if(amp > THRES) {
 		runState = RUN;
 	}
+
+	// Only for testing without sound input
+//	runState = RUN;
 }
 
 //----------------------------------------------------------------
@@ -86,8 +90,7 @@ void FugueSampler::allocateSamples() {
 					event.push_back(m);
 				}
 
-				bool isPresent = find(cache.begin(), cache.end(), event)
-					!= cache.end();
+				bool isPresent = find(cache.begin(), cache.end(), event) != cache.end();
 
 				if(!isPresent) {
 					cache.push_back(event);

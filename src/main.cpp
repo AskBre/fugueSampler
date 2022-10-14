@@ -23,12 +23,17 @@ int main(int argc, char *argv[] ) {
 
 	// Miditick
 	unsigned long long tick = 0;
-	while(fugueSampler.runState==RUN) {
-		fugueSampler.update(tick);
-		usleep(1000);
-		tick++;
-
-		if(fugueSampler.runState == REACHED_END) tick = 0;
+	while(true) {
+		if(fugueSampler.runState == RUN) {
+			fugueSampler.update(tick);
+			usleep(1000);
+			tick++;
+		} else if(fugueSampler.runState == REACHED_END) {
+			tick = 0;
+			fugueSampler.runState = RUN;
+		} else if (fugueSampler.runState == STOPPED) {
+			exit(0);
+		}
 	}
 
 	fugueSampler.sampler.closeStream();

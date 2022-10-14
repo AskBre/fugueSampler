@@ -14,11 +14,11 @@
 
 using namespace std;
 
-enum runState_t { IDLE, RUN, REACHED_END };
+enum runState_t { IDLE, RUN, REACHED_END, STOPPED};
 
 class FugueSampler {
 	public:
-		void setup(string fileName);
+		void setup(string fileName, bool _shouldLoop);
 		void update(unsigned long long tick);
 		void ampDetect();
 
