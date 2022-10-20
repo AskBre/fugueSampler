@@ -53,7 +53,7 @@ void Sampler::closeStream() {
 //----------------------------------------------------------------
 void Sampler::newSample(const char sampleName, const float sampleLengthInSec) {
 	if(getSampleIndex(sampleName) != -1) {
-		cerr << "Samplename " << (unsigned)sampleName << " already exists!" << endl;
+		cerr << "Samplename " << (unsigned)sampleName << " already exists" << endl;
 		return;
 	}
 

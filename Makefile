@@ -17,5 +17,8 @@ $(ODIR)/%.o:$(SDIR)/%.cpp $(DEPS)
 fugueSampler:$(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
+clean:
+	rm fugueSampler
+
 run:
 	./fugueSampler

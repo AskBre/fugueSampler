@@ -14,12 +14,12 @@
 
 using namespace std;
 
-enum runState_t { IDLE, RUN, REACHED_END, STOPPED};
+enum runState_t { IDLE, RUN, REACHED_END, STOPPED };
 
 class FugueSampler {
 	public:
 		void setup(string fileName, bool _shouldLoop);
-		void update(unsigned long long tick);
+		void update();
 		void ampDetect();
 
 		bool shouldLoop;
@@ -27,14 +27,16 @@ class FugueSampler {
 		runState_t runState = IDLE;
 
 	private:
-		smf::MidiFile file;
+		void recAndPlay(unsigned long long tick);
 		void allocateSamples();
 
+		smf::MidiFile file;
+
+		unsigned long tick = 0;
 		unsigned nTracks;
 		unsigned nEvents = 0;
-		unsigned eventCounter;
+		unsigned eventCounter = 0;
 		unsigned oldPercent = 100;
 
 		vector<unsigned> indices;
-		vector<unsigned> curIndices;
 };

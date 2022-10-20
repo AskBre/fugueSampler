@@ -22,7 +22,33 @@ void FugueSampler::setup(string fileName, bool _shouldLoop) {
 	sampler.openStream();
 }
 
-void FugueSampler::update(unsigned long long tick) {
+void FugueSampler::update() {
+	if(runState == RUN) {
+		recAndPlay(tick);
+		usleep(1000);
+		tick++;
+	} else if(runState == REACHED_END) {
+		tick = 0;
+		runState = RUN;
+	} else if (runState == STOPPED) {
+		exit(0);
+	}
+
+}
+
+void FugueSampler::ampDetect() {
+	double amp = sampler.getAmplitude();
+	cout << amp << endl;
+	if(amp > THRES) {
+		runState = RUN;
+	}
+
+	// If debugging without audio input, don't wait for audio input 
+	runState = RUN;
+}
+
+//----------------------------------------------------------------
+void FugueSampler::recAndPlay(unsigned long long tick) {
 	for(unsigned track=0; track < nTracks; track++) {
 		unsigned index = indices.at(track);
 		if(file.getEventCount(track) > index) {
@@ -65,18 +91,6 @@ void FugueSampler::update(unsigned long long tick) {
 	}
 }
 
-void FugueSampler::ampDetect() {
-	double amp = sampler.getAmplitude();
-	cout << amp << endl;
-	if(amp > THRES) {
-		runState = RUN;
-	}
-
-	// Only for testing without sound input
-//	runState = RUN;
-}
-
-//----------------------------------------------------------------
 void FugueSampler::allocateSamples() {
 	vector< vector<unsigned char> > cache;
 
