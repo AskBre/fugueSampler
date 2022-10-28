@@ -14,7 +14,7 @@ int main(int argc, char *argv[] ) {
 		fugueSampler.setup(argv[1], shouldLoop);
 	} else {
 		cout << "Need input midi file" << endl;
-		exit(1);
+		exit(0);
 	}
 
 	while(fugueSampler.runState == IDLE) {

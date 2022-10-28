@@ -12,6 +12,28 @@ void FugueSampler::setup(string fileName, bool _shouldLoop) {
 	file.doTimeAnalysis();
 	file.linkNotePairs();
 
+	ticksPerQuarterNote = file.getTicksPerQuarterNote();
+	cout << "TPQN is " << ticksPerQuarterNote << endl;
+
+	// Iterate through to the tempo-message
+	for(unsigned t=0; t<file.getTrackCount(); t++) {
+		for(unsigned e=0; e<file.getEventCount(t); e++) {
+			if(file[t][e].isTempo()) {
+				beatsPerMinute = file[t][e].getTempoBPM();
+				cout << "BPM is " << beatsPerMinute << endl;
+			}
+		}
+	}
+
+	//Set default BPM
+	if(!beatsPerMinute) beatsPerMinute = 120;
+
+	double dur = 1.0f / (beatsPerMinute/60 * ticksPerQuarterNote);
+	cout << "DUR " << dur << endl;
+	tickDuration = (chrono::duration<double>) dur;
+	cout << "TICKLENGHT " << tickDuration.count() << endl;
+	prevTickTime = chrono::system_clock::now();
+
 	nTracks = file.getTrackCount();
 	indices.resize(nTracks);
 
@@ -23,15 +45,22 @@ void FugueSampler::setup(string fileName, bool _shouldLoop) {
 }
 
 void FugueSampler::update() {
-	if(runState == RUN) {
-		recAndPlay(tick);
-		usleep(1000);
-		tick++;
-	} else if(runState == REACHED_END) {
-		tick = 0;
-		runState = RUN;
-	} else if (runState == STOPPED) {
-		exit(0);
+	chrono::time_point<chrono::high_resolution_clock> curTime;
+	curTime = chrono::system_clock::now();
+
+	chrono::duration<double> deltaPrevTick =  curTime - prevTickTime;
+
+	if(deltaPrevTick > tickDuration) {
+		if(runState == RUN) {
+			recAndPlay(tick);
+			tick++;
+		} else if(runState == REACHED_END) {
+			tick = 0;
+			runState = RUN;
+		} else if (runState == STOPPED) {
+			exit(0);
+		}
+		prevTickTime = curTime;
 	}
 
 }
@@ -43,8 +72,8 @@ void FugueSampler::ampDetect() {
 		runState = RUN;
 	}
 
-	// If debugging without audio input, don't wait for audio input 
-	runState = RUN;
+	// If debugging without audio input
+//	runState = RUN;
 }
 
 //----------------------------------------------------------------
@@ -61,7 +90,6 @@ void FugueSampler::recAndPlay(unsigned long long tick) {
 					const char name = event.at(1);
 
 					if(sampler.isRecorded(name)) {
-						cout << "Playing " << name << endl;
 						sampler.play(name, duration);
 					} else {
 						sampler.record(name);
@@ -74,7 +102,7 @@ void FugueSampler::recAndPlay(unsigned long long tick) {
 					unsigned percent =
 						(float)eventCounter/(float)nEvents*100;
 					if(percent!=oldPercent) {
-						cout << percent << "%" << endl;
+//						cout << percent << "%" << endl;
 					}
 
 					oldPercent = percent;

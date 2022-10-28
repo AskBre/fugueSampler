@@ -1,0 +1,62 @@
+MFile 1 2 240
+MTrk
+0 Meta SeqName "076 Chilled Beat 1A"
+0 TimeSig 4/4 24 8
+0 KeySig 0 major
+0 Tempo 789474
+0 Meta TrkEnd
+TrkEnd
+MTrk
+0 Meta TrkName "076 Chilled Beat 1A"
+0 On ch=10 n=42 v=66
+0 On ch=10 n=36 v=118
+30 On ch=10 n=42 v=0
+30 On ch=10 n=36 v=0
+123 On ch=10 n=42 v=37
+153 On ch=10 n=42 v=0
+241 On ch=10 n=38 v=97
+243 On ch=10 n=42 v=74
+271 On ch=10 n=38 v=0
+273 On ch=10 n=42 v=0
+362 On ch=10 n=36 v=115
+363 On ch=10 n=42 v=33
+392 On ch=10 n=36 v=0
+393 On ch=10 n=42 v=0
+482 On ch=10 n=42 v=51
+512 On ch=10 n=42 v=0
+601 On ch=10 n=42 v=36
+631 On ch=10 n=42 v=0
+721 On ch=10 n=38 v=99
+725 On ch=10 n=42 v=72
+751 On ch=10 n=38 v=0
+755 On ch=10 n=42 v=0
+844 On ch=10 n=42 v=44
+874 On ch=10 n=42 v=0
+960 On ch=10 n=42 v=67
+960 On ch=10 n=36 v=118
+990 On ch=10 n=42 v=0
+990 On ch=10 n=36 v=0
+1084 On ch=10 n=42 v=39
+1114 On ch=10 n=42 v=0
+1200 On ch=10 n=38 v=99
+1206 On ch=10 n=42 v=75
+1230 On ch=10 n=38 v=0
+1236 On ch=10 n=42 v=0
+1321 On ch=10 n=36 v=112
+1323 On ch=10 n=42 v=34
+1351 On ch=10 n=36 v=0
+1353 On ch=10 n=42 v=0
+1442 On ch=10 n=42 v=60
+1472 On ch=10 n=42 v=0
+1564 On ch=10 n=42 v=46
+1594 On ch=10 n=42 v=0
+1681 On ch=10 n=38 v=100
+1682 On ch=10 n=42 v=83
+1711 On ch=10 n=38 v=0
+1712 On ch=10 n=42 v=0
+1801 On ch=10 n=36 v=94
+1805 On ch=10 n=46 v=99
+1831 On ch=10 n=36 v=0
+1835 On ch=10 n=46 v=0
+1835 Meta TrkEnd
+TrkEnd

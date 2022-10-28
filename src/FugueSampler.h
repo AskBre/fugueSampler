@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <chrono>
 #include <unistd.h>
 #include <cstdlib>
 #include <signal.h>
@@ -31,6 +32,12 @@ class FugueSampler {
 		void allocateSamples();
 
 		smf::MidiFile file;
+
+		chrono::time_point<chrono::high_resolution_clock> prevTickTime;
+
+		unsigned beatsPerMinute;
+		unsigned ticksPerQuarterNote;
+		chrono::duration<double> tickDuration;
 
 		unsigned long tick = 0;
 		unsigned nTracks;
