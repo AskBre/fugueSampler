@@ -29,6 +29,7 @@ class Sampler {
 		void play(const char sampleName, const float seconds);
 
 		bool isRecorded(const char &name);
+		bool isPlaying(const char &name);
 		double getAmplitude();
 
 	private:

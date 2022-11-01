@@ -87,13 +87,14 @@ void FugueSampler::recAndPlay(unsigned long long tick) {
 				float duration = file[track][index].getDurationInSeconds();
 
 				if(event.tick < tick) {
-					const char name = event.at(1);
+					curSampleName = event.at(1);
 
-					if(sampler.isRecorded(name)) {
-						sampler.play(name, duration);
+					if(sampler.isRecorded(curSampleName)) {
+						sampler.play(curSampleName, duration);
+						cout << "Playing " << curSampleName << endl;
 					} else {
-						sampler.record(name);
-						cout << "Recording " << name << endl;
+						sampler.record(curSampleName);
+						cout << "Recording " << curSampleName << endl;
 					}
 
 					indices.at(track)++;
@@ -110,7 +111,7 @@ void FugueSampler::recAndPlay(unsigned long long tick) {
 			} else {
 				indices.at(track)++;
 			}
-		} else if (shouldLoop && index > nEvents) {
+		} else if (shouldLoop && index > nEvents && !sampler.isPlaying(curSampleName)) {
 			cout << "LOooooooOOOOOOoooooooooooooooOOooooooooooooooooOOooooooOOooOOOOOOooooooooooooooping!" << endl;
 			runState = REACHED_END;
 			eventCounter = 0;

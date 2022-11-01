@@ -21,4 +21,4 @@ clean:
 	rm fugueSampler
 
 run:
-	./fugueSampler chilledBeat.mid
+	./fugueSampler FugueSampler.mid

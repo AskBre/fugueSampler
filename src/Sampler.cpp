@@ -105,6 +105,12 @@ bool Sampler::isRecorded(const char &name) {
 	return audioData.samples.at(getSampleIndex(name)).isRecorded;
 }
 
+bool Sampler::isPlaying(const char &name) {
+	bool isPlaying = false;
+	if(audioData.samples.at(getSampleIndex(name)).state == PLAY) isPlaying = true;
+	return isPlaying;
+}
+
 double Sampler::getAmplitude() {
 
 	double amp = 0;

@@ -35,6 +35,7 @@ class FugueSampler {
 
 		chrono::time_point<chrono::high_resolution_clock> prevTickTime;
 
+		char curSampleName;
 		unsigned beatsPerMinute;
 		unsigned ticksPerQuarterNote;
 		chrono::duration<double> tickDuration;
