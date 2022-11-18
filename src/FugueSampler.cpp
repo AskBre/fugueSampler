@@ -91,7 +91,7 @@ void FugueSampler::recAndPlay(unsigned long long tick) {
 
 					if(sampler.isRecorded(curSampleName)) {
 						sampler.play(curSampleName, duration);
-						cout << "Playing " << curSampleName << endl;
+//						cout << "Playing " << curSampleName << endl;
 					} else {
 						sampler.record(curSampleName);
 						cout << "Recording " << curSampleName << endl;
@@ -103,7 +103,7 @@ void FugueSampler::recAndPlay(unsigned long long tick) {
 					unsigned percent =
 						(float)eventCounter/(float)nEvents*100;
 					if(percent!=oldPercent) {
-//						cout << percent << "%" << endl;
+						cout << percent << "%" << endl;
 					}
 
 					oldPercent = percent;

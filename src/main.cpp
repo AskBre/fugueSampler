@@ -18,6 +18,7 @@ int main(int argc, char *argv[] ) {
 	}
 
 	while(fugueSampler.runState == IDLE) {
+		// Wait for input
 		usleep(100000);
 		fugueSampler.ampDetect();
 	}
